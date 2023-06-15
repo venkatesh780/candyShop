@@ -100,5 +100,34 @@ function handleCandyForm(e) {
   addCandy(candy);
 }
 
+function handleBuy(e) {
+  if (e.target.innerText === "Buy 1") {
+    let currId = e.target.parentElement.parentElement.firstChild.innerText;
+    candies.forEach((candy) => {
+      if (candy.id === currId) {
+        candy.quantity = String(parseInt(candy.quantity) - 1);
+      }
+    });
+    renderItemsIntoPage();
+  } else if (e.target.innerText === "Buy 2") {
+    let currId = e.target.parentElement.parentElement.firstChild.innerText;
+    candies.forEach((candy) => {
+      if (candy.id === currId) {
+        candy.quantity = String(parseInt(candy.quantity) - 2);
+      }
+    });
+    renderItemsIntoPage();
+  } else if (e.target.innerText === "Buy 3") {
+    let currId = e.target.parentElement.parentElement.firstChild.innerText;
+    candies.forEach((candy) => {
+      if (candy.id === currId) {
+        candy.quantity = String(parseInt(candy.quantity) - 3);
+      }
+    });
+    renderItemsIntoPage();
+  }
+}
+
+candyList.addEventListener("click", handleBuy);
 addItemBtn.addEventListener("click", handleCandyForm);
 renderItemsIntoPage();
