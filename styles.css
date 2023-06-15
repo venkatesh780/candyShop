@@ -61,3 +61,7 @@ p {
 #add-item-btn:hover {
   cursor: pointer;
 }
+#error {
+  text-align: center;
+  color: red;
+}

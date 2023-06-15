@@ -91,21 +91,32 @@ async function handleCandyForm(e) {
     const price = document.getElementById("price").value;
     const quantity = document.getElementById("quantity").value;
 
-    const candyArr = await getCandies();
-    const id = String(candyArr.length + 1);
+    if (
+      candyName !== "" &&
+      description !== "" &&
+      price !== "" &&
+      quantity !== ""
+    ) {
+      document.getElementById("error").style.display = "none";
+      const candyArr = await getCandies();
+      const id = String(candyArr.length + 1);
 
-    const candy = {
-      id,
-      candyName,
-      description,
-      price,
-      quantity,
-    };
-    document.getElementById("candyname").value = "";
-    document.getElementById("description").value = "";
-    document.getElementById("price").value = "";
-    document.getElementById("quantity").value = "";
-    addCandy(candy);
+      const candy = {
+        id,
+        candyName,
+        description,
+        price,
+        quantity,
+      };
+      document.getElementById("candyname").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("quantity").value = "";
+      addCandy(candy);
+    } else {
+      const error = document.getElementById("error");
+      error.textContent = "Please Enter Valid Details";
+    }
   } catch (e) {
     console.log(e.message);
   }
