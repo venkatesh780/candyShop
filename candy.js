@@ -1,25 +1,18 @@
 const addItemBtn = document.getElementById("add-item-btn");
 const candyList = document.getElementById("candy-list");
 
-const candies = [
-  {
-    id: "1",
-    candyName: "chaco",
-    description: "chacolate",
-    price: "2",
-    quantity: "1000",
-  },
-  {
-    id: "2",
-    candyName: "vennel",
-    description: "venni",
-    price: "1",
-    quantity: "200",
-  },
-];
+const candiesApiEndPoint =
+  "https://crudcrud.com/api/28c954176e484fd390108ccb3decee95/candies";
 
-function renderItemsIntoPage() {
+async function getCandies() {
+  const response = await axios.get(candiesApiEndPoint);
+  return response.data;
+}
+
+async function renderItemsIntoPage() {
   candyList.innerHTML = "";
+  const candies = await getCandies();
+
   candies.forEach((candy) => {
     const { id, candyName, description, price, quantity } = candy;
 
@@ -71,12 +64,13 @@ function renderItemsIntoPage() {
   });
 }
 
-function addCandy(candy) {
-  candies.push(candy);
+async function addCandy(candy) {
+  const response = await axios.post(candiesApiEndPoint, candy);
+
   renderItemsIntoPage();
 }
 
-function handleCandyForm(e) {
+async function handleCandyForm(e) {
   e.preventDefault();
 
   const candyName = document.getElementById("candyname").value;
@@ -84,7 +78,8 @@ function handleCandyForm(e) {
   const price = document.getElementById("price").value;
   const quantity = document.getElementById("quantity").value;
 
-  const id = candies.length + 1;
+  const candyArr = await getCandies();
+  const id = String(candyArr.length + 1);
 
   const candy = {
     id,
@@ -100,30 +95,61 @@ function handleCandyForm(e) {
   addCandy(candy);
 }
 
-function handleBuy(e) {
+async function updateCandy(candyId, candy, n) {
+  const { id, candyName, description, price, quantity } = candy;
+  const latestQuantity = String(parseInt(candy.quantity) - n);
+  const newCandy = {
+    id: id,
+    candyName: candyName,
+    description: description,
+    price: price,
+    quantity: latestQuantity,
+  };
+  let reponse = await axios.put(candiesApiEndPoint + "/" + candyId, newCandy);
+}
+
+async function handleBuy(e) {
   if (e.target.innerText === "Buy 1") {
     let currId = e.target.parentElement.parentElement.firstChild.innerText;
+    const candies = await getCandies();
+    let candyId;
+    let currCandy;
     candies.forEach((candy) => {
       if (candy.id === currId) {
-        candy.quantity = String(parseInt(candy.quantity) - 1);
+        candyId = candy._id;
+        currCandy = candy;
+        // candy.quantity = String(parseInt(candy.quantity) - 1);
       }
     });
+    await updateCandy(candyId, currCandy, 1);
     renderItemsIntoPage();
   } else if (e.target.innerText === "Buy 2") {
     let currId = e.target.parentElement.parentElement.firstChild.innerText;
+    const candies = await getCandies();
+    let candyId;
+    let currCandy;
     candies.forEach((candy) => {
       if (candy.id === currId) {
-        candy.quantity = String(parseInt(candy.quantity) - 2);
+        candyId = candy._id;
+        currCandy = candy;
+        // candy.quantity = String(parseInt(candy.quantity) - 1);
       }
     });
+    await updateCandy(candyId, currCandy, 2);
     renderItemsIntoPage();
   } else if (e.target.innerText === "Buy 3") {
     let currId = e.target.parentElement.parentElement.firstChild.innerText;
+    const candies = await getCandies();
+    let candyId;
+    let currCandy;
     candies.forEach((candy) => {
       if (candy.id === currId) {
-        candy.quantity = String(parseInt(candy.quantity) - 3);
+        candyId = candy._id;
+        currCandy = candy;
+        // candy.quantity = String(parseInt(candy.quantity) - 1);
       }
     });
+    await updateCandy(candyId, currCandy, 3);
     renderItemsIntoPage();
   }
 }
